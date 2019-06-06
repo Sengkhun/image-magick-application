@@ -1,11 +1,19 @@
 // @flow
 import { combineReducers } from 'redux';
-import { routerReducer as router } from 'react-router-redux';
+import { persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
+
 import counter from './counter';
+import ImageReducer from './ImageReducer';
 
-const rootReducer = combineReducers({
+const ImageReducerPersistConfig = {
+  key: 'image',
+  storage,
+};
+
+const ImagePersistedReducer = persistReducer(ImageReducerPersistConfig, ImageReducer);
+
+export default combineReducers({
   counter,
-  router
+  ImageReducer: ImagePersistedReducer
 });
-
-export default rootReducer;

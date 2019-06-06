@@ -2,8 +2,6 @@
 
 const developmentEnvironments = ['development', 'test'];
 
-const developmentPlugins = [require('react-hot-loader/babel')];
-
 const productionPlugins = [
   require('babel-plugin-dev-expression'),
 
@@ -61,7 +59,7 @@ module.exports = api => {
       [require('@babel/plugin-proposal-class-properties'), { loose: true }],
       require('@babel/plugin-proposal-json-strings'),
 
-      ...(development ? developmentPlugins : productionPlugins)
+      ...productionPlugins
     ]
   };
 };

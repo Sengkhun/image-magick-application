@@ -1,13 +1,15 @@
-import { app, Menu, shell, BrowserWindow } from 'electron';
-import { dialog } from 'electron';
+import { app, dialog, Menu, shell, BrowserWindow } from 'electron';
+import { IMAGE_ACTION_TYPES } from './_actions/ImageActions';
 
 const appName = 'Image Magick GUI';
 const isMac = process.platform === 'darwin';
 
 const open = store => () => {
-  console.log("TCL: store", store)
   const file = dialog.showOpenDialog({ properties: ['openFile', 'openDirectory', 'multiSelections'] });
-  console.log("TCL: open -> file", file)
+  store.dispatch({
+    type: IMAGE_ACTION_TYPES.changeImagePath,
+    payload: file
+  });
 };
 
 export default class MenuBuilder {
@@ -146,7 +148,14 @@ export default class MenuBuilder {
           click: () => {
             this.mainWindow.setFullScreen(!this.mainWindow.isFullScreen());
           }
-        }
+        },
+        // {
+        //   label: 'Toggle &Developer Tools',
+        //   accelerator: 'Alt+Command+I',
+        //   click: () => {
+        //     this.mainWindow.toggleDevTools();
+        //   }
+        // }
       ]
     };
     const subMenuWindow = {
