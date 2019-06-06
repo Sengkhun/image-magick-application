@@ -1,28 +1,30 @@
 import React from 'react';
-import { render } from 'react-dom';
+import ReactDOM from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
-import Root from './containers/Root';
-import { configureStore, history } from './store/configureStore';
-import './app.global.css';
+import { getInitialStateRenderer } from 'electron-redux';
 
-const store = configureStore();
+import App from './App';
+import { configureStore } from './store/configureStore';
+import history from './store/history';
 
-render(
+const initialState = getInitialStateRenderer();
+const store = configureStore(initialState, 'renderer');
+
+ReactDOM.render(
   <AppContainer>
-    <Root store={store} history={history} />
-  </AppContainer>,
-  document.getElementById('root')
+    <App store={store} history={history} />
+  </AppContainer>
+  , document.getElementById('root')
 );
 
 if (module.hot) {
-  module.hot.accept('./containers/Root', () => {
-    // eslint-disable-next-line global-require
-    const NextRoot = require('./containers/Root').default;
-    render(
+  module.hot.accept('./App', () => {
+    const NextApp = require('./App'); // eslint-disable-line global-require
+    ReactDOM.render(
       <AppContainer>
-        <NextRoot store={store} history={history} />
-      </AppContainer>,
-      document.getElementById('root')
+        <NextApp store={store} history={history} />
+      </AppContainer>
+      , document.getElementById('root')
     );
   });
 }

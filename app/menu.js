@@ -1,11 +1,21 @@
-// @flow
 import { app, Menu, shell, BrowserWindow } from 'electron';
+import { dialog } from 'electron';
+
+const appName = 'Image Magick GUI';
+const isMac = process.platform === 'darwin';
+
+const open = store => () => {
+  console.log("TCL: store", store)
+  const file = dialog.showOpenDialog({ properties: ['openFile', 'openDirectory', 'multiSelections'] });
+  console.log("TCL: open -> file", file)
+};
 
 export default class MenuBuilder {
   mainWindow: BrowserWindow;
 
-  constructor(mainWindow: BrowserWindow) {
+  constructor(mainWindow: BrowserWindow, store) {
     this.mainWindow = mainWindow;
+    this.store = store;
   }
 
   buildMenu() {
@@ -45,17 +55,17 @@ export default class MenuBuilder {
 
   buildDarwinTemplate() {
     const subMenuAbout = {
-      label: 'Electron',
+      label: appName,
       submenu: [
         {
-          label: 'About ElectronReact',
+          label: `About ${appName}`,
           selector: 'orderFrontStandardAboutPanel:'
         },
         { type: 'separator' },
         { label: 'Services', submenu: [] },
         { type: 'separator' },
         {
-          label: 'Hide ElectronReact',
+          label: `Hide ${appName}`,
           accelerator: 'Command+H',
           selector: 'hide:'
         },
@@ -73,6 +83,16 @@ export default class MenuBuilder {
             app.quit();
           }
         }
+      ]
+    };
+    const subMenuFile = {
+      label: 'File',
+      submenu: [
+        { label: 'New', accelerator: 'CmdOrCtrl+N' },
+        { label: 'Open', accelerator: 'CmdOrCtrl+O', click: open(this.store) },
+        { label: 'Save', accelerator: 'CmdOrCtrl+S' },
+        { label: 'Save as ...', accelerator: 'CmdOrCtrl+Shift+S' },
+        { role: isMac ? 'close' : 'quit' }
       ]
     };
     const subMenuEdit = {
@@ -177,7 +197,7 @@ export default class MenuBuilder {
     const subMenuView =
       process.env.NODE_ENV === 'development' ? subMenuViewDev : subMenuViewProd;
 
-    return [subMenuAbout, subMenuEdit, subMenuView, subMenuWindow, subMenuHelp];
+    return [subMenuAbout, subMenuFile, subMenuEdit, subMenuView, subMenuWindow, subMenuHelp];
   }
 
   buildDefaultTemplate() {
