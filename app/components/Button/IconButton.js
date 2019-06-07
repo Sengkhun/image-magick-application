@@ -26,7 +26,7 @@ const styles = theme => ({
 
 class IconButton extends PureComponent {
   render() {
-    const { classes, title, icon, selected } = this.props;
+    const { classes, title, icon, selected, onClick } = this.props;
     return (
       <div 
         title={title}
@@ -34,6 +34,7 @@ class IconButton extends PureComponent {
           classes.root,
           selected ? classes.selected : classes.hover
         )}
+        onClick={onClick}
       >
         <i className={classNames(classes.icon, 'fas', icon)}/>
       </div>

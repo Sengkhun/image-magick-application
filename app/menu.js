@@ -1,3 +1,4 @@
+import check from 'check-types';
 import { app, dialog, Menu, shell, BrowserWindow } from 'electron';
 import { IMAGE_ACTION_TYPES } from './_actions/ImageActions';
 
@@ -5,11 +6,18 @@ const appName = 'Image Magick GUI';
 const isMac = process.platform === 'darwin';
 
 const open = store => () => {
-  const file = dialog.showOpenDialog({ properties: ['openFile', 'openDirectory', 'multiSelections'] });
-  store.dispatch({
-    type: IMAGE_ACTION_TYPES.changeImagePath,
-    payload: file
+  const file = dialog.showOpenDialog({ 
+    properties: ['openFile'],
+    filters: [
+      { name: 'Images', extensions: ['jpg', 'jpeg', 'png'] }
+    ]
   });
+  if (check.nonEmptyArray(file)) {
+    store.dispatch({
+      type: IMAGE_ACTION_TYPES.changeImagePath,
+      payload: file && file[0]
+    });
+  }
 };
 
 export default class MenuBuilder {
