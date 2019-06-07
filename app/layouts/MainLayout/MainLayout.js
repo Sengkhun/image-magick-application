@@ -5,7 +5,7 @@ import {
   withStyles
 } from '@material-ui/core';
 
-import { Toolbar } from '../../components';
+import { Panel, Toolbar } from '../../components';
 
 const styles = theme => ({
   root: {
@@ -36,6 +36,8 @@ class MainLayout extends PureComponent {
         <main className={classes.content}>
           { children }
         </main>
+
+        <Panel/>
       </div>
     );
   }

@@ -12,6 +12,7 @@ const styles = theme => ({
   },
   selected: {
     backgroundColor: '#383838',
+    border: '.5px solid #666666'
   },
   hover: {
     '&:hover': {
