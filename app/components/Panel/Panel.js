@@ -1,9 +1,14 @@
 import React, { PureComponent } from 'react';
 import classNames from "classnames";
+import sizeOf from 'image-size';
+import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core';
+import im from 'imagemagick';
 
 import Input from '../Input';
 import { Button } from '../Button';
+
+import { changeAppReducer } from '../../_actions/AppActions';
 
 const styles = theme => ({
   root: {
@@ -57,19 +62,77 @@ const styles = theme => ({
 class Panel extends PureComponent {
 
   state = {
-    proportion: true
+    proportion: true,
+    originalWidth: 0,
+    originalHeight: 0,
+    width: 0,
+    height: 0
   };
+
+  componentWillMount() {
+    // get image size
+    sizeOf(this.props.imagePath, (err, dimensions) => {
+      const { width, height } = dimensions;
+      this.setState({ 
+        originalWidth: width, 
+        originalHeight: height,
+        width, 
+        height
+      });
+    });
+  }
 
   onProportionClick = () => {
     this.setState({
       proportion: !this.state.proportion
     });
-  }
+  };
+
+  closePanel = () => {
+    this.props.changeAppReducer({ openPanel: false });
+  };
+
+  onWidthChange = e => {
+    const width = e.target.value;
+    if (this.state.proportion) {
+      const scale = this.state.originalWidth / width;
+      const height = Math.round(this.state.originalHeight / scale * 100) / 100;
+      this.setState({ width, height });
+    } else {
+      this.setState({ width });
+    }
+  };
+
+  onHeightChange = e => {
+    const height = e.target.value;
+    if (this.state.proportion) {
+      const scale = this.state.originalHeight / height;
+      const width = Math.round(this.state.originalWidth / scale * 100) / 100;
+      this.setState({ width, height });
+    } else {
+      this.setState({ height });
+    }
+  };
+
+  onSaveClick = () => {
+    const { originalWidth, originalHeight, width, height } = this.state;
+    const { imagePath, changeAppReducer } = this.props;
+    changeAppReducer({ loading: true });
+    if (!(originalWidth === width && originalHeight === height)) {
+      im.convert([imagePath, '-resize', `${width}x${height}`, imagePath], function() {
+        changeAppReducer({ loading: false, reloadImage: true });
+      });
+    }
+  };
 
   render() {
-    const { proportion } = this.state;
-    console.log("TCL: Panel -> render -> proportion", proportion)
-    const { classes } = this.props;
+    const { proportion, width, height } = this.state;
+    const { classes, openPanel } = this.props;
+
+    if (!openPanel) {
+      return null;
+    }
+
     return (
       <div className={classes.root}>
 
@@ -97,25 +160,46 @@ class Panel extends PureComponent {
             <Input 
               title='Width:'
               rightLabel='Pixels'
+              value={width}
+              onChange={this.onWidthChange}
             />
             <br/>
             <Input 
               title='Height:'
               rightLabel='Pixels'
+              value={height}
+              onChange={this.onHeightChange}
             />
           </div>
         </div>
 
         <div className={classes.buttonContainer}>
-          <Button title='Cancel' dim/>
+          <Button 
+            dim 
+            title='Cancel' 
+            onClick={this.closePanel}
+          />
           &nbsp;&nbsp;&nbsp;
-          <Button title='Save'/>
+          <Button 
+            title='Save'
+            onClick={this.onSaveClick}
+          />
         </div>
       </div>
     )
   }
 }
 
+const mapStateToProps = ({ AppReducer, ImageReducer }) => ({
+  openPanel: AppReducer.openPanel,
+  imagePath: ImageReducer.imagePath
+});
+
 const withStylePanel = withStyles(styles)(Panel);
 
-export default withStylePanel;
+export default connect(
+  mapStateToProps,
+  { 
+    changeAppReducer
+  }
+)(withStylePanel);

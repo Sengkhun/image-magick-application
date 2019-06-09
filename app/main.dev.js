@@ -67,7 +67,7 @@ app.on('ready', async () => {
     show: false,
     width: 1024,
     height: 728,
-    fullscreen: true
+    // fullscreen: true
   });
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);

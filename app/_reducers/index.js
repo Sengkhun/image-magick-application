@@ -4,6 +4,7 @@ import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
 import counter from './counter';
+import AppReducer from './AppReducer';
 import ImageReducer from './ImageReducer';
 
 const ImageReducerPersistConfig = {
@@ -15,5 +16,6 @@ const ImagePersistedReducer = persistReducer(ImageReducerPersistConfig, ImageRed
 
 export default combineReducers({
   counter,
+  AppReducer,
   ImageReducer: ImagePersistedReducer
 });

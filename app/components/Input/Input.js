@@ -11,7 +11,7 @@ const styles = theme => ({
     marginRight: theme.spacing(1)
   },
   input: {
-    width: 200,
+    width: 150,
     backgroundColor: '#535353',
     border: '.5px solid #dddddd',
     color: '#dddddd',
@@ -27,7 +27,7 @@ const styles = theme => ({
 class Input extends PureComponent {
 
   render() {
-    const { classes, title, width, rightLabel } = this.props;
+    const { classes, title, width, rightLabel, value, onChange } = this.props;
     return (
       <div className={classes.root}>
         <label className={classes.title}>
@@ -37,6 +37,8 @@ class Input extends PureComponent {
         <input
           className={classes.input}
           style={{ width: `${width}px` }}
+          value={value}
+          onChange={onChange}
         />
 
         { rightLabel && 

@@ -30,7 +30,7 @@ const styles = theme => ({
   }
 });
 
-class Home extends PureComponent {
+class Home extends Component {
 
   render() {
     const { classes, imagePath, imageOriginalPath, cursor } = this.props;
@@ -59,10 +59,11 @@ class Home extends PureComponent {
   }
 }
 
-const mapStateToProps = ({ ImageReducer }) => ({
+const mapStateToProps = ({ AppReducer, ImageReducer }) => ({
+  reloadImage: AppReducer.reloadImage,
+  cursor: AppReducer.cursor,
+  imageOriginalPath: ImageReducer.imageOriginalPath,
   imagePath: ImageReducer.imagePath,
-  reload: ImageReducer.reload,
-  cursor: ImageReducer.cursor
 });
 
 const withStyleHome = withStyles(styles)(Home);

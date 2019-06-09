@@ -5,11 +5,7 @@ import imageDir from '../images';
 
 const INITIAL_STATE = {
   imageOriginalPath: '',
-  imagePath: '',
-  reload: true,
-  cursor: 'default',
-  width: 0,
-  height: 0
+  imagePath: ''
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -24,36 +20,12 @@ export default (state = INITIAL_STATE, action) => {
 
         // path to display image on ui
         imagePath = imageDir;
-
-        // get image size
-        sizeOf(imageOriginalPath, function (err, dimensions) {
-          if (!err) {
-            const { width, height } = dimensions;
-            return {
-              ...state,
-              imageOriginalPath,
-              imagePath,
-              width, 
-              height
-            };
-          }
-        });
       }
-    }
-
-    case IMAGE_ACTION_TYPES.reloadImage: {
-      const reload = !state.reload;
       return {
         ...state,
-        reload
-      }
-    }
-
-    case IMAGE_ACTION_TYPES.changeCursor: {
-      return {
-        ...state,
-        cursor: action.payload
-      }
+        imageOriginalPath,
+        imagePath
+      };
     }
 
     case IMAGE_ACTION_TYPES.changeImageReducer: {

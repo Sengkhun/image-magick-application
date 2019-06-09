@@ -5,11 +5,8 @@ import im from 'imagemagick';
 
 import { IconButton } from '../Button';
 
-import { 
-  reloadImage, 
-  changeCursor,
-  changeImageReducer
-} from '../../_actions/ImageActions';
+import { changeAppReducer } from '../../_actions/AppActions';
+import { changeImageReducer } from '../../_actions/ImageActions';
 
 const styles = theme => ({
   root: {
@@ -26,8 +23,12 @@ const styles = theme => ({
 class Toolbar extends PureComponent {
 
   state = {
-    selected: 'Move tool'
+    selected: ''
   };
+
+  componentWillMount() {
+    this.moveImage('Move tool')();
+  }
 
   changeSelected = selected => {
     if (selected !== this.state.selected) {
@@ -37,20 +38,25 @@ class Toolbar extends PureComponent {
 
   moveImage = title => () => {
     this.changeSelected(title);
-    this.props.changeCursor('move')
+    this.props.changeAppReducer({ cursor: 'move' });
   };
 
   roateImage = title => () => {
-    this.changeSelected(title);
-    this.props.changeCursor('wait');
+    const { loading, imagePath, reloadImage, changeAppReducer } = this.props;
 
-    const { imagePath, reload, changeImageReducer } = this.props;
+    // if loading, do nothing
+    if (loading) return;
+
+    this.changeSelected(title);
+    this.props.changeAppReducer({ loading: true });
+
     if (imagePath) {
       im.convert(['-rotate', '-90', imagePath, imagePath],
         function(err, stdout) {
-          changeImageReducer({
-            cursor: 'default',
-            reload: !reload
+          changeAppReducer({ 
+            loading: false, 
+            reloadImage: true,
+            cursor: 'defautl'
           });
         }
       );
@@ -88,9 +94,10 @@ class Toolbar extends PureComponent {
   }
 }
 
-const mapStateToProps = ({ ImageReducer }) => ({
-  imagePath: ImageReducer.imagePath,
-  reload: ImageReducer.reload
+const mapStateToProps = ({ AppReducer, ImageReducer }) => ({
+  loading: AppReducer.loading,
+  reloadImage: AppReducer.reloadImage,
+  imagePath: ImageReducer.imagePath
 });
 
 const withStyleToolbar = withStyles(styles)(Toolbar);
@@ -98,8 +105,7 @@ const withStyleToolbar = withStyles(styles)(Toolbar);
 export default connect(
   mapStateToProps,
   { 
-    reloadImage,
-    changeCursor,
+    changeAppReducer,
     changeImageReducer
   }
 )(withStyleToolbar);

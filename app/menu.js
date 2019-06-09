@@ -1,5 +1,7 @@
 import check from 'check-types';
 import { app, dialog, Menu, shell, BrowserWindow } from 'electron';
+
+import { APP_ACTION_TYPES } from './_actions/AppActions';
 import { IMAGE_ACTION_TYPES } from './_actions/ImageActions';
 
 const appName = 'Image Magick GUI';
@@ -18,6 +20,13 @@ const open = store => () => {
       payload: file && file[0]
     });
   }
+};
+
+const openImageSizePanel = store => () => {
+  store.dispatch({
+    type: APP_ACTION_TYPES.changeAppReducer,
+    payload: { openPanel: true }
+  });
 };
 
 export default class MenuBuilder {
@@ -121,6 +130,12 @@ export default class MenuBuilder {
         }
       ]
     };
+    const subMenuImage = {
+      label: 'Image',
+      submenu: [
+        { label: 'Image Size', accelerator: 'Alt+CommandOrControl+I', click: openImageSizePanel(this.store) }
+      ]
+    };
     const subMenuViewDev = {
       label: 'View',
       submenu: [
@@ -140,7 +155,7 @@ export default class MenuBuilder {
         },
         {
           label: 'Toggle Developer Tools',
-          accelerator: 'Alt+Command+I',
+          accelerator: 'Command+D',
           click: () => {
             this.mainWindow.toggleDevTools();
           }
@@ -214,7 +229,7 @@ export default class MenuBuilder {
     const subMenuView =
       process.env.NODE_ENV === 'development' ? subMenuViewDev : subMenuViewProd;
 
-    return [subMenuAbout, subMenuFile, subMenuEdit, subMenuView, subMenuWindow, subMenuHelp];
+    return [subMenuAbout, subMenuFile, subMenuEdit, subMenuImage, subMenuView, subMenuWindow, subMenuHelp];
   }
 
   buildDefaultTemplate() {
@@ -258,7 +273,7 @@ export default class MenuBuilder {
                 },
                 {
                   label: 'Toggle &Developer Tools',
-                  accelerator: 'Alt+Ctrl+I',
+                  accelerator: 'Ctrl+D',
                   click: () => {
                     this.mainWindow.toggleDevTools();
                   }

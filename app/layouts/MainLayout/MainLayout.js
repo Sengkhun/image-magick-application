@@ -1,14 +1,16 @@
 import React, { PureComponent } from 'react';
+import { connect } from 'react-redux';
 
 import { 
   CssBaseline, 
   withStyles
 } from '@material-ui/core';
 
-import { Panel, Toolbar } from '../../components';
+import { Loading, Panel, Toolbar } from '../../components';
 
 const styles = theme => ({
   root: {
+    position: 'relative',
     display: 'flex',
     height: '100%',
     position: 'relative'
@@ -22,14 +24,17 @@ class MainLayout extends PureComponent {
 
   render() {
 
-    const { 
+    const {
       children, 
-      classes
+      classes,
+      loading
     } = this.props;
 
     return (
       <div className={classes.root}>
         <CssBaseline/>
+
+        { loading && <Loading/> }
         
         <Toolbar/>
         
@@ -44,4 +49,13 @@ class MainLayout extends PureComponent {
 
 }
 
-export default withStyles(styles)(MainLayout);
+const mapStateToProps = ({ AppReducer }) => ({
+  loading: AppReducer.loading
+});
+
+const withStyleMainLayout = withStyles(styles)(MainLayout);
+
+export default connect(
+  mapStateToProps,
+  null
+)(withStyleMainLayout);
