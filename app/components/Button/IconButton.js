@@ -6,7 +6,7 @@ const styles = theme => ({
   root: {
     display: 'flex',
     padding: `${theme.spacing(.7)}px ${theme.spacing(1.2)}px`,
-    marginBottom: theme.spacing(1),
+    marginBottom: theme.spacing(3),
     borderRadius: 4,
     cursor: 'pointer'
   },

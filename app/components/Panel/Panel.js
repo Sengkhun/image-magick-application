@@ -1,9 +1,10 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, Component } from 'react';
 import classNames from "classnames";
 import sizeOf from 'image-size';
+import im from 'imagemagick';
+import fs from 'fs';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core';
-import im from 'imagemagick';
 
 import Input from '../Input';
 import { Button } from '../Button';
@@ -59,28 +60,51 @@ const styles = theme => ({
   }
 });
 
-class Panel extends PureComponent {
+class Panel extends Component {
 
   state = {
+    imageOriginalPath: '',
     proportion: true,
     originalWidth: 0,
     originalHeight: 0,
     width: 0,
-    height: 0
+    height: 0,
+    fileSize: 0,
   };
 
   componentWillMount() {
-    // get image size
-    sizeOf(this.props.imagePath, (err, dimensions) => {
+    this.getImageMetadata();
+  }
+
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   if (nextProps.imageOriginalPath !== this.props.imageOriginalPath) {
+  //     this.getImageMetadata();
+  //     return true;
+  //   }
+  //   return false;
+  // }
+
+  getImageMetadata = () => {
+    const { imagePath, imageOriginalPath } = this.props;
+    sizeOf(imagePath, (err, dimensions) => {
       const { width, height } = dimensions;
-      this.setState({ 
+      const stats = fs.statSync(imagePath);
+      let fileSize = stats.size;
+      if (fileSize >= 1000000) {
+        fileSize = `${Math.round(fileSize / 1000000 * 10) / 10}MB`;
+      } else {
+        fileSize = `${Math.round(fileSize / 1000)}KB`;
+      }
+      this.setState({
+        imageOriginalPath,
         originalWidth: width, 
         originalHeight: height,
         width, 
-        height
+        height,
+        fileSize
       });
     });
-  }
+  };
 
   onProportionClick = () => {
     this.setState({
@@ -126,18 +150,23 @@ class Panel extends PureComponent {
   };
 
   render() {
-    const { proportion, width, height } = this.state;
+    const { proportion, width, height, fileSize } = this.state;
     const { classes, openPanel } = this.props;
 
     if (!openPanel) {
       return null;
+    }
+    
+    // update metadata when change pic
+    if (this.state.imageOriginalPath !== this.props.imageOriginalPath) {
+      this.getImageMetadata();
     }
 
     return (
       <div className={classes.root}>
 
         <div className={classes.title}>
-          Image Size: 6M
+          Image Size: {fileSize}
         </div>
 
         <div className={classes.sizeContainer}>
@@ -192,7 +221,8 @@ class Panel extends PureComponent {
 
 const mapStateToProps = ({ AppReducer, ImageReducer }) => ({
   openPanel: AppReducer.openPanel,
-  imagePath: ImageReducer.imagePath
+  imagePath: ImageReducer.imagePath,
+  imageOriginalPath: ImageReducer.imageOriginalPath,
 });
 
 const withStylePanel = withStyles(styles)(Panel);

@@ -12,6 +12,7 @@ const styles = theme => ({
   root: {
     display: 'flex',
     flexFlow: 'column',
+    justifyContent: 'center',
     backgroundColor: '#535353',
     padding: `${theme.spacing(1)}px ${theme.spacing(.5)}px`
   },
