@@ -32,15 +32,26 @@ const styles = theme => ({
 
 class Home extends Component {
 
+  eventLogger = (e, data) => {
+    console.log('Event: ', e);
+    console.log('Data: ', data);
+  };
+
   render() {
-    const { classes, imagePath, imageOriginalPath, cursor } = this.props;
+
+    const { 
+      classes, 
+      imagePath, 
+      imageOriginalPath, 
+      cursor
+    } = this.props;
+
     return (
       <div 
         className={classes.root}
         style={{ cursor: `${cursor}` }}
       >
-
-        <div 
+        <div
           className={classes.imageContainer} 
           style={{ cursor: `${cursor}` }}
         >
@@ -53,7 +64,6 @@ class Home extends Component {
             : <div className={classes.blankPaper}></div>
           }
         </div>
-
       </div>
     )
   }

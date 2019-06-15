@@ -64,12 +64,16 @@ class Toolbar extends PureComponent {
     }
   };
 
+  typeImage = title => () => {
+    this.changeSelected(title);
+    this.props.changeAppReducer({ cursor: 'text' });
+  };
+
   tools = [
     { title: 'Move tool', icon: 'fa-arrows-alt', onClick: this.moveImage },
     { title: 'Rotate tool', icon: 'fa-undo', onClick: this.roateImage },
     { title: 'GrayScale tool', icon: 'fa-palette', onClick: () => {} },
-    { title: 'Type tool', icon: 'fa-font', onClick: () => {} },
-    // { title: , icon: , onClick: () => {} },
+    { title: 'Type tool', icon: 'fa-font', onClick: this.typeImage },
   ];
 
   render() {
