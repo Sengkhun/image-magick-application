@@ -8,7 +8,8 @@ const styles = theme => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#282828'
+    backgroundColor: '#282828',
+    userSelect: 'none'
   },
   imageContainer: {
     display: 'flex',

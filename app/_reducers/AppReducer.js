@@ -2,6 +2,7 @@ import { APP_ACTION_TYPES } from '../_actions/AppActions';
 
 const INITIAL_STATE = {
   openPanel: false,
+  controlPanel: '',
   loading: false,
   reloadImage: 0,
   cursor: 'default'

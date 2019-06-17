@@ -81,10 +81,18 @@
       ]
     },
     "win": {
-      "target": ["nsis", "msi"]
+      "target": [
+        "nsis",
+        "msi"
+      ]
     },
     "linux": {
-      "target": ["deb", "rpm", "snap", "AppImage"],
+      "target": [
+        "deb",
+        "rpm",
+        "snap",
+        "AppImage"
+      ],
       "category": "Development"
     },
     "directories": {
@@ -141,11 +149,17 @@
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/internals/mocks/fileMock.js",
       "\\.(css|less|sass|scss)$": "identity-obj-proxy"
     },
-    "moduleFileExtensions": ["js", "jsx", "json"],
+    "moduleFileExtensions": [
+      "js",
+      "jsx",
+      "json"
+    ],
     "transform": {
       "^.+\\.jsx?$": "babel-jest"
     },
-    "setupFiles": ["./internals/scripts/CheckBuiltsExist.js"]
+    "setupFiles": [
+      "./internals/scripts/CheckBuiltsExist.js"
+    ]
   },
   "devDependencies": {
     "@babel/core": "^7.1.6",
@@ -259,6 +273,7 @@
     "named-urls": "^1.4.0",
     "path": "^0.12.7",
     "react": "^16.8.6",
+    "react-color": "^2.17.3",
     "react-cursor-position": "^3.0.3",
     "react-dom": "^16.8.6",
     "react-draggable": "^3.3.0",

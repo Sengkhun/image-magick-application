@@ -25,7 +25,7 @@ const open = store => () => {
 const openImageSizePanel = store => () => {
   store.dispatch({
     type: APP_ACTION_TYPES.changeAppReducer,
-    payload: { openPanel: true }
+    payload: { controlPanel: 'imageSize' }
   });
 };
 

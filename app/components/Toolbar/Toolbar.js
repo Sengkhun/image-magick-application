@@ -57,11 +57,35 @@ class Toolbar extends PureComponent {
           changeAppReducer({ 
             loading: false, 
             reloadImage: true,
-            cursor: 'defautl'
+            cursor: 'default'
           });
         }
       );
     }
+  };
+
+  colorImage = title => () => {
+    this.changeSelected(title);
+    this.props.changeAppReducer({ controlPanel: 'colorPicker' });
+    // const { loading, imagePath, reloadImage, changeAppReducer } = this.props;
+
+    // // if loading, do nothing
+    // if (loading) return;
+
+    // this.changeSelected(title);
+    // this.props.changeAppReducer({ loading: true });
+
+    // if (imagePath) {
+    //   im.convert(['-colorize', '0,0,50', imagePath, imagePath],
+    //     function(err, stdout) {
+    //       changeAppReducer({
+    //         loading: false, 
+    //         reloadImage: true,
+    //         cursor: 'default'
+    //       });
+    //     }
+    //   );
+    // }
   };
 
   typeImage = title => () => {
@@ -72,7 +96,7 @@ class Toolbar extends PureComponent {
   tools = [
     { title: 'Move tool', icon: 'fa-arrows-alt', onClick: this.moveImage },
     { title: 'Rotate tool', icon: 'fa-undo', onClick: this.roateImage },
-    { title: 'GrayScale tool', icon: 'fa-palette', onClick: () => {} },
+    { title: 'Color tool', icon: 'fa-palette', onClick: this.colorImage },
     { title: 'Type tool', icon: 'fa-font', onClick: this.typeImage },
   ];
 
