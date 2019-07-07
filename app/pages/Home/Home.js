@@ -9,21 +9,18 @@ const styles = theme => ({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#282828',
-    userSelect: 'none'
+    userSelect: 'none',
+    overflow: 'auto'
   },
   imageContainer: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    maxHeight: '95%',
-    maxWidth: '95%',
     height: '95%',
-    cursor: 'all-scroll',
-    // zoom: 0.5;
   },
   image: {
     maxHeight: '100%',
-    maxWidth: '100%',
+    maxWidth: '100%'
   },
   blankPaper: {
     height: 500,
@@ -34,14 +31,38 @@ const styles = theme => ({
 
 class Home extends Component {
 
+  state = {
+    zoom: 1
+  };
+
   eventLogger = (e, data) => {
     console.log('Event: ', e);
     console.log('Data: ', data);
   };
 
+  onWheel = e => {
+    const { zoom } = this.state;
+    if (e.altKey) {
+      if (e.deltaY < 0) {
+        const nextZoom = zoom + .05;
+        if (nextZoom <= 3) {
+          this.setState({ zoom: nextZoom });
+        }
+  
+      } else if (e.deltaY > 0) {
+        const nextZoom = zoom - .05;
+        if (nextZoom > .2) {
+          this.setState({ zoom: nextZoom });
+        }
+      }
+    }
+  };
+
   render() {
 
-    const { 
+    const { zoom } = this.state;
+
+    const {
       classes, 
       imagePath, 
       imageOriginalPath, 
@@ -52,10 +73,14 @@ class Home extends Component {
       <div 
         className={classes.root}
         style={{ cursor: `${cursor}` }}
+        onWheel={this.onWheel}
       >
         <div
           className={classes.imageContainer} 
-          style={{ cursor: `${cursor}` }}
+          style={{ 
+            cursor: `${cursor}`, 
+            transform: `scale(${zoom})`, 
+          }}
         >
           {
             imagePath
