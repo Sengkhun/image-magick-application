@@ -59,6 +59,24 @@ module.exports = api => {
       [require('@babel/plugin-proposal-class-properties'), { loose: true }],
       require('@babel/plugin-proposal-json-strings'),
 
+      [ require.resolve('babel-plugin-module-resolver'),
+        {
+          root: ["./app"],
+          alias: {
+            "/": "./app",
+            actions: './app/_actions',
+            reducers: './app/_reducers',
+            components: './app/components',
+            images: './app/public/images',
+            layouts: './app/layouts',
+            pages: './app/pages',
+            public: './app/public',
+            routes: './app/routes',
+            themes: './app/themes',
+          }
+        }
+      ],
+
       ...productionPlugins
     ]
   };

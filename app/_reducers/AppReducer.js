@@ -1,4 +1,4 @@
-import { APP_ACTION_TYPES } from '../_actions/AppActions';
+import { APP_ACTION_TYPES } from 'actions/AppActions';
 
 const INITIAL_STATE = {
   openPanel: false,

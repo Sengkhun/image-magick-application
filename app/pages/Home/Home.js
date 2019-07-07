@@ -18,7 +18,8 @@ const styles = theme => ({
     maxHeight: '95%',
     maxWidth: '95%',
     height: '95%',
-    cursor: 'all-scroll'
+    cursor: 'all-scroll',
+    // zoom: 0.5;
   },
   image: {
     maxHeight: '100%',
