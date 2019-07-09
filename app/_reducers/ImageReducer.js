@@ -2,31 +2,32 @@ import fs from 'fs';
 import sizeOf from 'image-size';
 import { IMAGE_ACTION_TYPES } from 'actions/ImageActions';
 import { IMAGE_DIR } from 'constants';
+import { imageNameHepler } from 'lib/helpers';
 
 const INITIAL_STATE = {
   imageOriginalPath: '',
-  imagePath: ''
+  activeIndex: 0,
+  images: []
 };
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     
-    case IMAGE_ACTION_TYPES.changeImagePath: {
+    case IMAGE_ACTION_TYPES.openImage: {
       const imageOriginalPath = action.payload;
-      let imagePath = '';
       if (imageOriginalPath) {
         // copy image to resource
-        fs.copyFileSync(imageOriginalPath, 'app/public/images/temp');
-
-        // path to display image on ui
-        imagePath = `${IMAGE_DIR}/temp`;
+        const imagePath = imageNameHepler(imageOriginalPath, 0);
+        fs.copyFileSync(imageOriginalPath, imagePath);
+        
+        return {
+          ...state,
+          imageOriginalPath,
+          images: [imagePath],
+        }
       }
 
-      return {
-        ...state,
-        imageOriginalPath,
-        imagePath
-      };
+      return INITIAL_STATE;
     }
 
     case IMAGE_ACTION_TYPES.changeImageReducer: {

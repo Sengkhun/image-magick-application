@@ -1,12 +1,12 @@
 export const IMAGE_ACTION_TYPES = {
-  changeImagePath: 'changeImagePath',
+  openImage: 'openImage',
   changeImageReducer: 'changeImageReducer',
 };
 
 // ----------------------------------------
 
 export const changeImagePath = imagePath => ({
-  type: IMAGE_ACTION_TYPES.changeImagePath,
+  type: IMAGE_ACTION_TYPES.openImage,
   payload: imagePath
 });
 

@@ -10,9 +10,11 @@
  *
  * @flow
  */
+import _ from 'lodash';
 import { app, BrowserWindow } from 'electron';
 import MenuBuilder from './menu';
 import { configureStore } from './store/configureStore';
+import { removeFile } from 'lib/helpers';
 
 const store = configureStore(undefined, 'main');
 
@@ -85,6 +87,14 @@ app.on('ready', async () => {
 
   mainWindow.on('closed', () => {
     mainWindow = null;
+  });
+
+  mainWindow.on('close', () => {
+    // remove created image
+    const images = store.getState().ImageReducer.images;
+    _.forEach(images, image => {
+      removeFile(image);
+    });
   });
 
   const menuBuilder = new MenuBuilder(mainWindow, store);

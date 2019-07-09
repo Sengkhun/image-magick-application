@@ -16,7 +16,7 @@ const open = store => () => {
   });
   if (check.nonEmptyArray(file)) {
     store.dispatch({
-      type: IMAGE_ACTION_TYPES.changeImagePath,
+      type: IMAGE_ACTION_TYPES.openImage,
       payload: file && file[0]
     });
   }

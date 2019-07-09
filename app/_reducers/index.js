@@ -7,15 +7,15 @@ import counter from './counter';
 import AppReducer from './AppReducer';
 import ImageReducer from './ImageReducer';
 
-const ImageReducerPersistConfig = {
-  key: 'image',
+const CounterReducerPersistConfig = {
+  key: 'counter',
   storage,
 };
 
-const ImagePersistedReducer = persistReducer(ImageReducerPersistConfig, ImageReducer);
+const CounterPersistedReducer = persistReducer(CounterReducerPersistConfig, counter);
 
 export default combineReducers({
-  counter,
+  counter: CounterPersistedReducer,
   AppReducer,
-  ImageReducer: ImagePersistedReducer
+  ImageReducer
 });

@@ -64,7 +64,8 @@ class Home extends Component {
 
     const {
       classes, 
-      imagePath, 
+      images, 
+      activeIndex,
       imageOriginalPath, 
       cursor
     } = this.props;
@@ -83,10 +84,10 @@ class Home extends Component {
           }}
         >
           {
-            imagePath
+            images[activeIndex]
             ? <img 
                 className={classes.image} 
-                src={imagePath + `?reload=${new Date()}`}
+                src={`${images[activeIndex]}?reload=${new Date()}`}
               />
             : <div className={classes.blankPaper}></div>
           }
@@ -100,7 +101,8 @@ const mapStateToProps = ({ AppReducer, ImageReducer }) => ({
   reloadImage: AppReducer.reloadImage,
   cursor: AppReducer.cursor,
   imageOriginalPath: ImageReducer.imageOriginalPath,
-  imagePath: ImageReducer.imagePath,
+  activeIndex: ImageReducer.activeIndex,
+  images: ImageReducer.images,
 });
 
 const withStyleHome = withStyles(styles)(Home);
