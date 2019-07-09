@@ -2,6 +2,7 @@ import React, { PureComponent, Fragment } from 'react';
 import classNames from 'classnames';
 import { connect } from 'react-redux';
 import sizeOf from 'image-size';
+import _ from 'lodash';
 import im from 'imagemagick';
 import fs from 'fs';
 import { withStyles } from '@material-ui/core';
@@ -9,7 +10,8 @@ import { withStyles } from '@material-ui/core';
 import Input from '../Input';
 import { Button } from '../Button';
 
-import { changeAppReducer } from '../../_actions/AppActions';
+import { changeAppReducer } from 'actions/AppActions';
+import { resizeImage } from 'actions/ImageActions';
 
 const styles = theme => ({
   title: {
@@ -100,20 +102,30 @@ class Resize extends PureComponent {
 
   onSaveClick = () => {
     const { originalWidth, originalHeight, width, height } = this.state;
-    const { imagePath, changeAppReducer } = this.props;
-    changeAppReducer({ loading: true });
+    const { images } = this.props;
+    const currentImage = _.last(images);
+    this.props.changeAppReducer({ loading: true });
+
     if (!(originalWidth === width && originalHeight === height)) {
-      im.convert([imagePath, '-resize', `${width}x${height}`, imagePath], function() {
-        changeAppReducer({ loading: false, reloadImage: true });
-      });
+      const callback = (ok, error) => {
+        if (!ok) {
+          alert(error);
+        }
+        this.props.changeAppReducer({ 
+          loading: false,
+          reloadImage: true
+        });
+      };
+      this.props.resizeImage(currentImage,  width, height, callback);
     }
   };
 
   getImageMetadata = () => {
-    const { imagePath, imageOriginalPath } = this.props;
-    sizeOf(imagePath, (err, dimensions) => {
+    const { images, imageOriginalPath } = this.props;
+    const currentImage = _.last(images);
+    sizeOf(currentImage, (err, dimensions) => {
       const { width, height } = dimensions;
-      const stats = fs.statSync(imagePath);
+      const stats = fs.statSync(currentImage);
       let fileSize = stats.size;
       if (fileSize >= 1000000) {
         fileSize = `${Math.round(fileSize / 1000000 * 10) / 10}MB`;
@@ -198,7 +210,7 @@ class Resize extends PureComponent {
 }
 
 const mapStateToProps = ({ ImageReducer }) => ({
-  imagePath: ImageReducer.imagePath,
+  images: ImageReducer.images,
   imageOriginalPath: ImageReducer.imageOriginalPath,
 });
 
@@ -207,6 +219,7 @@ const withStyleResize = withStyles(styles)(Resize);
 export default connect(
   mapStateToProps,
   { 
-    changeAppReducer
+    changeAppReducer,
+    resizeImage
   }
 )(withStyleResize);

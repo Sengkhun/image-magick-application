@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { Component, PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core';
@@ -65,7 +66,6 @@ class Home extends Component {
     const {
       classes, 
       images, 
-      activeIndex,
       imageOriginalPath, 
       cursor
     } = this.props;
@@ -84,10 +84,10 @@ class Home extends Component {
           }}
         >
           {
-            images[activeIndex]
+            images.length > 0
             ? <img 
                 className={classes.image} 
-                src={`${images[activeIndex]}?reload=${new Date()}`}
+                src={`${_.last(images)}?reload=${new Date()}`}
               />
             : <div className={classes.blankPaper}></div>
           }
@@ -101,7 +101,6 @@ const mapStateToProps = ({ AppReducer, ImageReducer }) => ({
   reloadImage: AppReducer.reloadImage,
   cursor: AppReducer.cursor,
   imageOriginalPath: ImageReducer.imageOriginalPath,
-  activeIndex: ImageReducer.activeIndex,
   images: ImageReducer.images,
 });
 

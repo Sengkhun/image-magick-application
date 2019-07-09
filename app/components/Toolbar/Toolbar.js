@@ -1,12 +1,16 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core';
+import _ from 'lodash';
 import im from 'imagemagick';
 
 import { IconButton } from '../Button';
 
-import { changeAppReducer } from '../../_actions/AppActions';
-import { changeImageReducer } from '../../_actions/ImageActions';
+import { changeAppReducer } from 'actions/AppActions';
+import { 
+  changeImageReducer, 
+  roateImage 
+} from 'actions/ImageActions';
 
 const styles = theme => ({
   root: {
@@ -43,7 +47,7 @@ class Toolbar extends PureComponent {
   };
 
   roateImage = title => () => {
-    const { loading, imagePath, reloadImage, changeAppReducer } = this.props;
+    const { loading, images, reloadImage } = this.props;
 
     // if loading, do nothing
     if (loading) return;
@@ -51,16 +55,19 @@ class Toolbar extends PureComponent {
     this.changeSelected(title);
     this.props.changeAppReducer({ loading: true });
 
-    if (imagePath) {
-      im.convert(['-rotate', '-90', imagePath, imagePath],
-        function(err, stdout) {
-          changeAppReducer({ 
-            loading: false, 
-            reloadImage: true,
-            cursor: 'default'
-          });
+    const currentImage = _.last(images);
+    if (currentImage) {
+      const callback = (ok, error) => {
+        if (!ok) {
+          alert(error);
         }
-      );
+        this.props.changeAppReducer({ 
+          loading: false, 
+          reloadImage: true,
+          cursor: 'default'
+        });
+      };
+      this.props.roateImage(currentImage, -90, callback);
     }
   };
 
@@ -126,7 +133,7 @@ class Toolbar extends PureComponent {
 const mapStateToProps = ({ AppReducer, ImageReducer }) => ({
   loading: AppReducer.loading,
   reloadImage: AppReducer.reloadImage,
-  imagePath: ImageReducer.imagePath
+  images: ImageReducer.images
 });
 
 const withStyleToolbar = withStyles(styles)(Toolbar);
@@ -135,6 +142,7 @@ export default connect(
   mapStateToProps,
   { 
     changeAppReducer,
+    roateImage,
     changeImageReducer
   }
 )(withStyleToolbar);

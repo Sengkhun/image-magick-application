@@ -3,18 +3,20 @@ import path from 'path';
 
 // ===================================
 
-export const imageNameHepler = (imagePath, index) => {
+export const imageNameHepler = (imagePath) => {
   const dirname = path.dirname(imagePath);
   const filename = path.basename(imagePath);
-  return `${dirname}/.${index}${filename}`;
+  return `${dirname}/.${new Date()}${filename}`;
 };
 
 // ===================================
 
 export const removeFile = file => {
   try {
-    fs.unlinkSync(file);
+    if (fs.existsSync(file)) {
+      fs.unlinkSync(file);
+    }
   } catch (error) {
-    fsError(error);
+    console.log("TCL: error", error)
   }
 };

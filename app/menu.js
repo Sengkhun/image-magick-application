@@ -1,8 +1,11 @@
+import _ from 'lodash';
+import fs from 'fs';
 import check from 'check-types';
 import { app, dialog, Menu, shell, BrowserWindow } from 'electron';
 
-import { APP_ACTION_TYPES } from './_actions/AppActions';
-import { IMAGE_ACTION_TYPES } from './_actions/ImageActions';
+import { APP_ACTION_TYPES } from 'actions/AppActions';
+import { IMAGE_ACTION_TYPES } from 'actions/ImageActions';
+import { removeFile } from 'lib/helpers';
 
 const appName = 'Image Magick GUI';
 const isMac = process.platform === 'darwin';
@@ -19,6 +22,37 @@ const open = store => () => {
       type: IMAGE_ACTION_TYPES.openImage,
       payload: file && file[0]
     });
+  }
+};
+
+const save = store => () => {
+  const { images, imageOriginalPath } = store.getState().ImageReducer;
+  const saveImage = _.last(images);
+  if (saveImage) {
+    const contents = fs.readFileSync(saveImage);
+    fs.writeFileSync(imageOriginalPath, contents);
+  }
+};
+
+const saveAs = store => () => {
+  const { images, imageOriginalPath } = store.getState().ImageReducer;
+  const saveImage = _.last(images);
+  if (saveImage) {
+    const file = dialog.showSaveDialog(null, { defaultPath: imageOriginalPath });
+    if (file) {
+      // save image
+      fs.copyFileSync(saveImage, file);
+    }
+  }
+};
+
+const undo = store => () => {
+  const { images } = store.getState().ImageReducer;
+  const currentImage = _.last(images);
+  if (currentImage) {
+    // remove last image
+    removeFile(currentImage);
+    store.dispatch({ type: IMAGE_ACTION_TYPES.undoImage });
   }
 };
 
@@ -109,15 +143,15 @@ export default class MenuBuilder {
       submenu: [
         { label: 'New', accelerator: 'CmdOrCtrl+N' },
         { label: 'Open', accelerator: 'CmdOrCtrl+O', click: open(this.store) },
-        { label: 'Save', accelerator: 'CmdOrCtrl+S' },
-        { label: 'Save as ...', accelerator: 'CmdOrCtrl+Shift+S' },
+        { label: 'Save', accelerator: 'CmdOrCtrl+S', click: save(this.store) },
+        { label: 'Save as ...', accelerator: 'CmdOrCtrl+Shift+S', click: saveAs(this.store) },
         { role: isMac ? 'close' : 'quit' }
       ]
     };
     const subMenuEdit = {
       label: 'Edit',
       submenu: [
-        { label: 'Undo', accelerator: 'Command+Z', selector: 'undo:' },
+        { label: 'Undo', accelerator: 'Command+Z', selector: 'undo:', click: undo(this.store) },
         { label: 'Redo', accelerator: 'Shift+Command+Z', selector: 'redo:' },
         { type: 'separator' },
         { label: 'Cut', accelerator: 'Command+X', selector: 'cut:' },
