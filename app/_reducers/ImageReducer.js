@@ -1,7 +1,7 @@
 import fs from 'fs';
 import sizeOf from 'image-size';
 import { IMAGE_ACTION_TYPES } from 'actions/ImageActions';
-import imageDir from 'images';
+import { IMAGE_DIR } from 'constants';
 
 const INITIAL_STATE = {
   imageOriginalPath: '',
@@ -16,12 +16,12 @@ export default (state = INITIAL_STATE, action) => {
       let imagePath = '';
       if (imageOriginalPath) {
         // copy image to resource
-        fs.copyFileSync(imageOriginalPath, `app/public/images/temp`);
+        fs.copyFileSync(imageOriginalPath, 'app/public/images/temp');
 
         // path to display image on ui
-        console.log("TCL: imageDir", imageDir)
-        imagePath = imageDir;
+        imagePath = `${IMAGE_DIR}/temp`;
       }
+
       return {
         ...state,
         imageOriginalPath,

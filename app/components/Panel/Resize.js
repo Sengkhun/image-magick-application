@@ -156,8 +156,8 @@ class Resize extends PureComponent {
               )}
             >
               <img
-                className={classes.chainIcon} 
-                src='public/images/icons/chain.png'
+                className={classes.chainIcon}
+                src='public/icons/chain.png'
                 onClick={this.onProportionClick}
               />
             </div>

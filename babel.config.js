@@ -67,6 +67,7 @@ module.exports = api => {
             actions: './app/_actions',
             reducers: './app/_reducers',
             components: './app/components',
+            constants: './app/config/constants',
             images: './app/public/images',
             layouts: './app/layouts',
             pages: './app/pages',
