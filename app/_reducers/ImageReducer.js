@@ -23,7 +23,7 @@ export default (state = INITIAL_STATE, action) => {
       const imageOriginalPath = action.payload;
       if (imageOriginalPath) {
         // copy image to resource
-        const imagePath = imageNameHepler(imageOriginalPath);
+        const imagePath = imageNameHepler(imageOriginalPath, 0);
         fs.copyFileSync(imageOriginalPath, imagePath);
         
         return {

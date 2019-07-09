@@ -3,10 +3,10 @@ import path from 'path';
 
 // ===================================
 
-export const imageNameHepler = (imagePath) => {
+export const imageNameHepler = (imagePath, middlename) => {
   const dirname = path.dirname(imagePath);
   const filename = path.basename(imagePath);
-  return `${dirname}/.${new Date()}${filename}`;
+  return `${dirname}/.${middlename || new Date()}${filename}`;
 };
 
 // ===================================
