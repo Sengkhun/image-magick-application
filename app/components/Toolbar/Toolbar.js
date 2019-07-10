@@ -74,25 +74,6 @@ class Toolbar extends PureComponent {
   colorImage = title => () => {
     this.changeSelected(title);
     this.props.changeAppReducer({ controlPanel: 'colorPicker' });
-    // const { loading, imagePath, reloadImage, changeAppReducer } = this.props;
-
-    // // if loading, do nothing
-    // if (loading) return;
-
-    // this.changeSelected(title);
-    // this.props.changeAppReducer({ loading: true });
-
-    // if (imagePath) {
-    //   im.convert(['-colorize', '0,0,50', imagePath, imagePath],
-    //     function(err, stdout) {
-    //       changeAppReducer({
-    //         loading: false, 
-    //         reloadImage: true,
-    //         cursor: 'default'
-    //       });
-    //     }
-    //   );
-    // }
   };
 
   typeImage = title => () => {

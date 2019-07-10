@@ -4,7 +4,11 @@ import check from 'check-types';
 import { app, dialog, Menu, shell, BrowserWindow } from 'electron';
 
 import { APP_ACTION_TYPES } from 'actions/AppActions';
-import { IMAGE_ACTION_TYPES, roateImage, flipImage} from 'actions/ImageActions';
+import { 
+  IMAGE_ACTION_TYPES, 
+  roateImage, 
+  flipImage
+} from 'actions/ImageActions';
 import { removeFile } from 'lib/helpers';
 
 const appName = 'Image Magick GUI';
@@ -116,6 +120,13 @@ const flip = (store, flip) => () => {
     };
     flipImage(currentImage, flip, callback)(store.dispatch);
   }
+};
+
+const openColorizePanel = store => () => {
+  store.dispatch({
+    type: APP_ACTION_TYPES.changeAppReducer,
+    payload: { controlPanel: 'colorPicker' }
+  });
 };
 
 const openImageSizePanel = store => () => {
@@ -230,7 +241,7 @@ export default class MenuBuilder {
       label: 'Image',
       submenu: [
         { label: 'Adjustments', submenu: [
-            { label: 'Colorize', accelerator: 'CommandOrControl+B' }
+            { label: 'Colorize', accelerator: 'CommandOrControl+B', click: openColorizePanel(this.store) }
           ] 
         },
         { type: 'separator' },
