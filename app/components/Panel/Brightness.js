@@ -29,9 +29,9 @@ class Brightness extends PureComponent {
 
   handleInputChange = name => event => {
     const newValue = event.target.value;
-    if (newValue) {
+    // if (newValue) {
       this.setState({ [`${name}`]: Number(newValue) });      
-    }
+    // }
   };
 
   onSaveClick = () => {
@@ -170,7 +170,7 @@ const styles = theme => ({
     width: 40
   },
   slider: {
-    width: '100%',
+    width: 250,
     color: '#dddddd'
   },
   buttonContainer: {

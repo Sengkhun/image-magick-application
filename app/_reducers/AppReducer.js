@@ -1,6 +1,7 @@
 import { APP_ACTION_TYPES } from 'actions/AppActions';
 
 const INITIAL_STATE = {
+  selected: '',
   openPanel: false,
   controlPanel: '',
   loading: false,

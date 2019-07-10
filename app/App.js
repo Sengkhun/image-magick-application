@@ -15,6 +15,11 @@ class App extends Component {
       persistor
     } = this.props;
 
+    // create splice function
+    String.prototype.splice = function(idx, rem, str) {
+      return this.slice(0, idx) + str + this.slice(idx + Math.abs(rem));
+    };
+
     return (
       <Provider store={store}>
         <PersistGate loading='Loading' persistor={persistor}>

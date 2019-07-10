@@ -23,11 +23,11 @@ export const roateImage = (image, roateDegree, callback) => {
   return async dispatch => {
     const imagePath = imageNameHepler(image);
     im.convert(['-rotate', `${roateDegree}`, image, imagePath],
-      function(err, stdout) {
+      async function(err, stdout) {
         if (err) {
           callback(false, err);
         } else {
-          dispatch({
+          await dispatch({
             type: IMAGE_ACTION_TYPES.addNewImage,
             payload: imagePath
           });
@@ -45,11 +45,11 @@ export const flipImage = (image, flip, callback) => {
   return async dispatch => {
     const imagePath = imageNameHepler(image);
     im.convert([image, flip, imagePath],
-      function(err, stdout) {
+      async function(err, stdout) {
         if (err) {
           callback(false, err);
         } else {
-          dispatch({
+          await dispatch({
             type: IMAGE_ACTION_TYPES.addNewImage,
             payload: imagePath
           });
@@ -65,17 +65,19 @@ export const flipImage = (image, flip, callback) => {
 export const resizeImage = (image, width, height, callback) => {
   return async dispatch => {
     const imagePath = imageNameHepler(image);
-    im.convert([image, '-resize', `${width}x${height}`, imagePath], function(err) {
-      if (err) {
-        callback(false, err);
-      } else {
-        dispatch({
-          type: IMAGE_ACTION_TYPES.addNewImage,
-          payload: imagePath
-        });
-        callback(true);
+    im.convert([image, '-resize', `${width}x${height}`, imagePath], 
+      async function(err) {
+        if (err) {
+          callback(false, err);
+        } else {
+          await dispatch({
+            type: IMAGE_ACTION_TYPES.addNewImage,
+            payload: imagePath
+          });
+          callback(true);
+        }
       }
-    });
+    );
   };
 };
 
@@ -84,17 +86,19 @@ export const resizeImage = (image, width, height, callback) => {
 export const colorizeImage = (image, rgbColor, callback) => {
   return async dispatch => {
     const imagePath = imageNameHepler(image);
-    im.convert(['-colorize', rgbColor, image, imagePath], function(err) {
-      if (err) {
-        callback(false, err);
-      } else {
-        dispatch({
-          type: IMAGE_ACTION_TYPES.addNewImage,
-          payload: imagePath
-        });
-        callback(true);
+    im.convert(['-colorize', rgbColor, image, imagePath], 
+      async function(err) {
+        if (err) {
+          callback(false, err);
+        } else {
+          await dispatch({
+            type: IMAGE_ACTION_TYPES.addNewImage,
+            payload: imagePath
+          });
+          callback(true);
+        }
       }
-    });
+    );
   };
 };
 
@@ -103,17 +107,19 @@ export const colorizeImage = (image, rgbColor, callback) => {
 export const brightnessAndContrast = (image, brigthness, contrast, callback) => {
   return async dispatch => {
     const imagePath = imageNameHepler(image);
-    im.convert(['-brightness-contrast', `${brigthness}x${contrast}`, image, imagePath], function(err) {
-      if (err) {
-        callback(false, err);
-      } else {
-        dispatch({
-          type: IMAGE_ACTION_TYPES.addNewImage,
-          payload: imagePath
-        });
-        callback(true);
+    im.convert(['-brightness-contrast', `${brigthness}x${contrast}`, image, imagePath], 
+      async function(err) {
+        if (err) {
+          callback(false, err);
+        } else {
+          await dispatch({
+            type: IMAGE_ACTION_TYPES.addNewImage,
+            payload: imagePath
+          });
+          callback(true);
+        }
       }
-    });
+    );
   };
 };
 
@@ -122,17 +128,19 @@ export const brightnessAndContrast = (image, brigthness, contrast, callback) => 
 export const addTextOnImage = (image, font, size, text, callback) => {
   return async dispatch => {
     const imagePath = imageNameHepler(image);
-    im.convert([image, '-font', font, '-pointsize', size, '-draw', `text 200,200 '${text}'`, imagePath], function(err) {
-      if (err) {
-        callback(false, err);
-      } else {
-        dispatch({
-          type: IMAGE_ACTION_TYPES.addNewImage,
-          payload: imagePath
-        });
-        callback(true);
+    im.convert([image, '-font', font, '-pointsize', size, '-draw', `text 200,200 '${text}'`, imagePath], 
+      async function(err) {
+        if (err) {
+          callback(false, err);
+        } else {
+          await dispatch({
+            type: IMAGE_ACTION_TYPES.addNewImage,
+            payload: imagePath
+          });
+          callback(true);
+        }
       }
-    });
+    );
   };
 };
 

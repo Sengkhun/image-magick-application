@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core';
 import _ from 'lodash';
-import im from 'imagemagick';
 
 import { IconButton } from '../Button';
 
@@ -27,23 +26,14 @@ const styles = theme => ({
 
 class Toolbar extends PureComponent {
 
-  state = {
-    selected: ''
-  };
-
   componentWillMount() {
-    this.moveImage('Move tool')();
+    this.props.changeAppReducer({ selected: '' });
+    // console.log('.hello.jpg'.split(/\.(?=[^\.]+$)/));
+    console.log('.hello.jpg'.splice(6, 1, "2"));
   }
 
-  changeSelected = selected => {
-    if (selected !== this.state.selected) {
-      this.setState({ selected });
-    }
-  };
-
   moveImage = title => () => {
-    this.changeSelected(title);
-    this.props.changeAppReducer({ cursor: 'move' });
+    this.props.changeAppReducer({ selected: title, cursor: 'move' });
   };
 
   roateImage = title => () => {
@@ -52,8 +42,7 @@ class Toolbar extends PureComponent {
     // if loading, do nothing
     if (loading) return;
 
-    this.changeSelected(title);
-    this.props.changeAppReducer({ loading: true });
+    this.props.changeAppReducer({ selected: title, loading: true });
 
     const currentImage = _.last(images);
     if (currentImage) {
@@ -72,29 +61,37 @@ class Toolbar extends PureComponent {
   };
 
   colorImage = title => () => {
-    this.changeSelected(title);
-    this.props.changeAppReducer({ controlPanel: 'colorPicker' });
+    this.props.changeAppReducer({ selected: title, controlPanel: 'colorPicker' });
+  };
+
+  openBrightnessPanel = title => () => {
+    this.props.changeAppReducer({ selected: title, controlPanel: 'brightness' });
+  };
+
+  openResizePanel = title => () => {
+    this.props.changeAppReducer({ selected: title, controlPanel: 'imageSize' });
   };
 
   typeImage = title => () => {
-    this.changeSelected(title);
     this.props.changeAppReducer({ 
+      selected: title, 
       cursor: 'text',
       controlPanel: 'text'
     });
   };
 
   tools = [
-    { title: 'Move tool', icon: 'fa-arrows-alt', onClick: this.moveImage },
+    // { title: 'Move tool', icon: 'fa-arrows-alt', onClick: this.moveImage },
     { title: 'Rotate tool', icon: 'fa-undo', onClick: this.roateImage },
     { title: 'Color tool', icon: 'fa-palette', onClick: this.colorImage },
+    { title: 'Brightness/Contrast tool', icon: 'fa-adjust', onClick: this.openBrightnessPanel },
+    { title: 'Resize tool', icon: 'fa-compress-arrows-alt', onClick: this.openResizePanel },
     { title: 'Type tool', icon: 'fa-font', onClick: this.typeImage },
   ];
 
   render() {
 
-    const { selected } = this.state;
-    const { classes } = this.props;
+    const { classes, selected } = this.props;
 
     return (
       <div className={classes.root}>
@@ -115,6 +112,7 @@ class Toolbar extends PureComponent {
 }
 
 const mapStateToProps = ({ AppReducer, ImageReducer }) => ({
+  selected: AppReducer.selected,
   loading: AppReducer.loading,
   reloadImage: AppReducer.reloadImage,
   images: ImageReducer.images

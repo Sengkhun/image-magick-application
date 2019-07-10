@@ -14,8 +14,7 @@ const styles = theme => ({
     display: 'flex',
     flexDirection: 'column',
     backgroundColor: '#535353',
-    padding: theme.spacing(2),
-    minWidth: 250
+    padding: theme.spacing(2)
   }
 });
 
