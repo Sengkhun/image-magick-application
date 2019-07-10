@@ -4,7 +4,7 @@ import check from 'check-types';
 import { app, dialog, Menu, shell, BrowserWindow } from 'electron';
 
 import { APP_ACTION_TYPES } from 'actions/AppActions';
-import { IMAGE_ACTION_TYPES } from 'actions/ImageActions';
+import { IMAGE_ACTION_TYPES, roateImage, flipImage} from 'actions/ImageActions';
 import { removeFile } from 'lib/helpers';
 
 const appName = 'Image Magick GUI';
@@ -53,6 +53,68 @@ const undo = store => () => {
     // remove last image
     removeFile(currentImage);
     store.dispatch({ type: IMAGE_ACTION_TYPES.undoImage });
+  }
+};
+
+const rotate = (store, degree) => () => {
+  const { loading, reloadImage } = store.getState().AppReducer;
+  const { images } = store.getState().ImageReducer;
+
+  // if loading, do nothing
+  if (loading) return;
+
+  // show loading
+  store.dispatch({
+    type: APP_ACTION_TYPES.changeAppReducer,
+    payload: { loading: true }
+  });
+
+  const currentImage = _.last(images);
+  if (currentImage) {
+    const callback = (ok, error) => {
+      if (!ok) {
+        console.log(error);
+      }
+      store.dispatch({
+        type: APP_ACTION_TYPES.changeAppReducer,
+        payload: { 
+          loading: false, 
+          reloadImage: true
+        }
+      });
+    };
+    roateImage(currentImage, degree, callback)(store.dispatch);
+  }
+};
+
+const flip = (store, flip) => () => {
+  const { loading, reloadImage } = store.getState().AppReducer;
+  const { images } = store.getState().ImageReducer;
+
+  // if loading, do nothing
+  if (loading) return;
+
+  // show loading
+  store.dispatch({
+    type: APP_ACTION_TYPES.changeAppReducer,
+    payload: { loading: true }
+  });
+
+  const currentImage = _.last(images);
+  if (currentImage) {
+    const callback = (ok, error) => {
+      if (!ok) {
+        console.log(error);
+      }
+      store.dispatch({
+        type: APP_ACTION_TYPES.changeAppReducer,
+        payload: { 
+          loading: false, 
+          reloadImage: true
+        }
+      });
+    };
+    flipImage(currentImage, flip, callback)(store.dispatch);
   }
 };
 
@@ -167,7 +229,21 @@ export default class MenuBuilder {
     const subMenuImage = {
       label: 'Image',
       submenu: [
-        { label: 'Image Size', accelerator: 'Alt+CommandOrControl+I', click: openImageSizePanel(this.store) }
+        { label: 'Adjustments', submenu: [
+            { label: 'Colorize', accelerator: 'CommandOrControl+B' }
+          ] 
+        },
+        { type: 'separator' },
+        { label: 'Image Size', accelerator: 'Alt+CommandOrControl+I', click: openImageSizePanel(this.store) },
+        { label: 'Image Rotation', submenu: [
+            { label: '180°', click: rotate(this.store, 180) },
+            { label: '90° Clockwise', click: rotate(this.store, 90) },
+            { label: '90° Counter Clockwise', click: rotate(this.store, -90) },
+            { type: 'separator' },
+            { label: 'Flip Horizontal', click: flip(this.store, '+flop') },
+            { label: 'Flip Vertical', click: flip(this.store, '+flip') },
+          ] 
+        }
       ]
     };
     const subMenuViewDev = {

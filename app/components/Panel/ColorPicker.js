@@ -1,12 +1,16 @@
 import React, { PureComponent, Fragment } from 'react';
 import { SketchPicker } from 'react-color';
 import { connect } from 'react-redux';
-import im from 'imagemagick';
+import _ from 'lodash';
 import { withStyles } from '@material-ui/core';
 
 import { Button } from '../Button';
 
-import { changeAppReducer } from '../../_actions/AppActions';
+import { changeAppReducer } from 'actions/AppActions';
+import { 
+  colorizeImage, 
+  changeImageReducer 
+} from 'actions/ImageActions';
 
 const styles = theme => ({
   title: {
@@ -39,23 +43,25 @@ class ColorPicker extends PureComponent {
 
   onSaveClick = () => {
     const { rgbColor } = this.state;
-    const { loading, imagePath, changeAppReducer } = this.props;
+    const { loading, images } = this.props;
 
     // if loading, do nothing
     if (loading) return;
 
     this.props.changeAppReducer({ loading: true });
+    const currentImage = _.last(images);
 
-    if (imagePath) {
-      im.convert(['-colorize', rgbColor, imagePath, imagePath],
-        function(err, stdout) {
-          changeAppReducer({
-            loading: false,
-            reloadImage: true,
-            cursor: 'default'
-          });
+    if (currentImage) {
+      const callback = (ok, error) => {
+        if (!ok) {
+          alert(error);
         }
-      );
+        this.props.changeAppReducer({ 
+          loading: false, 
+          reloadImage: true
+        });
+      };
+      this.props.colorizeImage(currentImage, rgbColor, callback);
     }
   };
 
@@ -84,7 +90,7 @@ class ColorPicker extends PureComponent {
           />
           &nbsp;&nbsp;&nbsp;
           <Button 
-            title='Save'
+            title='Apply'
             onClick={this.onSaveClick}
           />
         </div>
@@ -96,7 +102,7 @@ class ColorPicker extends PureComponent {
 
 const mapStateToProps = ({ AppReducer, ImageReducer }) => ({
   loading: AppReducer.loading,
-  imagePath: ImageReducer.imagePath
+  images: ImageReducer.images
 });
 
 const withStyleColorPicker = withStyles(styles)(ColorPicker);
@@ -104,6 +110,8 @@ const withStyleColorPicker = withStyles(styles)(ColorPicker);
 export default connect(
   mapStateToProps,
   { 
-    changeAppReducer
+    changeAppReducer,
+    colorizeImage,
+    changeImageReducer
   }
 )(withStyleColorPicker);

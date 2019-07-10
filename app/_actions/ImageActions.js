@@ -41,10 +41,50 @@ export const roateImage = (image, roateDegree, callback) => {
 
 // ----------------------------------------
 
+export const flipImage = (image, flip, callback) => {
+  return async dispatch => {
+    const imagePath = imageNameHepler(image);
+    im.convert([image, flip, imagePath],
+      function(err, stdout) {
+        if (err) {
+          callback(false, err);
+        } else {
+          dispatch({
+            type: IMAGE_ACTION_TYPES.addNewImage,
+            payload: imagePath
+          });
+          callback(true);
+        }
+      }
+    );
+  };
+};
+
+// ----------------------------------------
+
 export const resizeImage = (image, width, height, callback) => {
   return async dispatch => {
     const imagePath = imageNameHepler(image);
     im.convert([image, '-resize', `${width}x${height}`, imagePath], function(err) {
+      if (err) {
+        callback(false, err);
+      } else {
+        dispatch({
+          type: IMAGE_ACTION_TYPES.addNewImage,
+          payload: imagePath
+        });
+        callback(true);
+      }
+    });
+  };
+};
+
+// ----------------------------------------
+
+export const colorizeImage = (image, rgbColor, callback) => {
+  return async dispatch => {
+    const imagePath = imageNameHepler(image);
+    im.convert(['-colorize', rgbColor, image, imagePath], function(err) {
       if (err) {
         callback(false, err);
       } else {
