@@ -100,6 +100,25 @@ export const colorizeImage = (image, rgbColor, callback) => {
 
 // ----------------------------------------
 
+export const brightnessAndContrast = (image, brigthness, contrast, callback) => {
+  return async dispatch => {
+    const imagePath = imageNameHepler(image);
+    im.convert(['-brightness-contrast', `${brigthness}x${contrast}`, image, imagePath], function(err) {
+      if (err) {
+        callback(false, err);
+      } else {
+        dispatch({
+          type: IMAGE_ACTION_TYPES.addNewImage,
+          payload: imagePath
+        });
+        callback(true);
+      }
+    });
+  };
+};
+
+// ----------------------------------------
+
 export const changeImageReducer = args => ({
   type: IMAGE_ACTION_TYPES.changeImageReducer,
   payload: args

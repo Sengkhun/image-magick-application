@@ -129,6 +129,13 @@ const openColorizePanel = store => () => {
   });
 };
 
+const openBrightnessPanel = store => () => {
+  store.dispatch({
+    type: APP_ACTION_TYPES.changeAppReducer,
+    payload: { controlPanel: 'brightness' }
+  });
+};
+
 const openImageSizePanel = store => () => {
   store.dispatch({
     type: APP_ACTION_TYPES.changeAppReducer,
@@ -225,22 +232,23 @@ export default class MenuBuilder {
       label: 'Edit',
       submenu: [
         { label: 'Undo', accelerator: 'Command+Z', selector: 'undo:', click: undo(this.store) },
-        { label: 'Redo', accelerator: 'Shift+Command+Z', selector: 'redo:' },
-        { type: 'separator' },
-        { label: 'Cut', accelerator: 'Command+X', selector: 'cut:' },
-        { label: 'Copy', accelerator: 'Command+C', selector: 'copy:' },
-        { label: 'Paste', accelerator: 'Command+V', selector: 'paste:' },
-        {
-          label: 'Select All',
-          accelerator: 'Command+A',
-          selector: 'selectAll:'
-        }
+        // { label: 'Redo', accelerator: 'Shift+Command+Z', selector: 'redo:' },
+        // { type: 'separator' },
+        // { label: 'Cut', accelerator: 'Command+X', selector: 'cut:' },
+        // { label: 'Copy', accelerator: 'Command+C', selector: 'copy:' },
+        // { label: 'Paste', accelerator: 'Command+V', selector: 'paste:' },
+        // {
+        //   label: 'Select All',
+        //   accelerator: 'Command+A',
+        //   selector: 'selectAll:'
+        // }
       ]
     };
     const subMenuImage = {
       label: 'Image',
       submenu: [
         { label: 'Adjustments', submenu: [
+            { label: 'Brightness/Contrast...', click: openBrightnessPanel(this.store) },
             { label: 'Colorize', accelerator: 'CommandOrControl+B', click: openColorizePanel(this.store) }
           ] 
         },

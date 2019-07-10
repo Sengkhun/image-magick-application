@@ -2,6 +2,7 @@ import React, { PureComponent, Component } from 'react';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core';
 
+import Brightness from './Brightness';
 import ColorPicker from './ColorPicker';
 import Resize from './Resize';
 
@@ -12,7 +13,8 @@ const styles = theme => ({
     display: 'flex',
     flexDirection: 'column',
     backgroundColor: '#535353',
-    padding: theme.spacing(2)
+    padding: theme.spacing(2),
+    minWidth: 250
   }
 });
 
@@ -30,6 +32,13 @@ class Panel extends Component {
       case 'colorPicker':
         return (
           <ColorPicker 
+            onCancel={this.onClosePanel}
+          />
+        );
+
+      case 'brightness':
+        return (
+          <Brightness 
             onCancel={this.onClosePanel}
           />
         );
