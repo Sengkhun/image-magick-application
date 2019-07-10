@@ -28,8 +28,6 @@ class Toolbar extends PureComponent {
 
   componentWillMount() {
     this.props.changeAppReducer({ selected: '' });
-    // console.log('.hello.jpg'.split(/\.(?=[^\.]+$)/));
-    console.log('.hello.jpg'.splice(6, 1, "2"));
   }
 
   moveImage = title => () => {

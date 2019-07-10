@@ -8,6 +8,7 @@ import Resize from './Resize';
 import Text from './Text';
 
 import { changeAppReducer } from '../../_actions/AppActions';
+import { changeTypeToolReducer } from 'actions/TypeToolActions';
 
 const styles = theme => ({
   root: {
@@ -46,14 +47,28 @@ class Panel extends Component {
       case 'text':
         return (
           <Text 
-            onCancel={this.onClosePanel}
+            onCancel={this.onCloseTypeToolPanel}
           />
         );
     }
   }
 
   onClosePanel = () => {
-    this.props.changeAppReducer({ controlPanel: '' });
+    this.props.changeAppReducer({ selected: '', controlPanel: '' });
+  };
+
+  onCloseTypeToolPanel = () => {
+    this.props.changeAppReducer({ 
+      selected: '', 
+      controlPanel: '' 
+    });
+    this.props.changeTypeToolReducer({
+      openWriter: false,
+      pos: {
+        x: 0,
+        y: 0
+      }
+    });
   };
 
   render() {
@@ -82,6 +97,7 @@ const withStylePanel = withStyles(styles)(Panel);
 export default connect(
   mapStateToProps,
   { 
-    changeAppReducer
+    changeAppReducer,
+    changeTypeToolReducer
   }
 )(withStylePanel);
