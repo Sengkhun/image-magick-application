@@ -5,6 +5,7 @@ import { withStyles } from '@material-ui/core';
 import Brightness from './Brightness';
 import ColorPicker from './ColorPicker';
 import Resize from './Resize';
+import Text from './Text';
 
 import { changeAppReducer } from '../../_actions/AppActions';
 
@@ -39,6 +40,13 @@ class Panel extends Component {
       case 'brightness':
         return (
           <Brightness 
+            onCancel={this.onClosePanel}
+          />
+        );
+
+      case 'text':
+        return (
+          <Text 
             onCancel={this.onClosePanel}
           />
         );

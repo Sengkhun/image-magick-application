@@ -6,6 +6,7 @@ import storage from 'redux-persist/lib/storage';
 import counter from './counter';
 import AppReducer from './AppReducer';
 import ImageReducer from './ImageReducer';
+import TypeToolReducer from './TypeToolReducer';
 
 const CounterReducerPersistConfig = {
   key: 'counter',
@@ -17,5 +18,6 @@ const CounterPersistedReducer = persistReducer(CounterReducerPersistConfig, coun
 export default combineReducers({
   counter: CounterPersistedReducer,
   AppReducer,
-  ImageReducer
+  ImageReducer,
+  TypeToolReducer
 });

@@ -78,7 +78,10 @@ class Toolbar extends PureComponent {
 
   typeImage = title => () => {
     this.changeSelected(title);
-    this.props.changeAppReducer({ cursor: 'text' });
+    this.props.changeAppReducer({ 
+      cursor: 'text',
+      controlPanel: 'text'
+    });
   };
 
   tools = [
