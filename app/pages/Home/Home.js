@@ -2,6 +2,7 @@ import _ from 'lodash';
 import React, { Component, PureComponent } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
+import check from 'check-types';
 import { TextField, withStyles } from '@material-ui/core';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import { Draggable } from 'components';
@@ -47,14 +48,24 @@ class Home extends Component {
     const image = ReactDOM.findDOMNode(this.imageRef.current).getBoundingClientRect();
     const textarea = ReactDOM.findDOMNode(this.textareaRef.current).getBoundingClientRect();
     const pos = {
-      x: textarea.x - image.x,
-      y: textarea.y - image.y + textarea.height
+      x: textarea.x - image.x + 1,
+      y: textarea.y - image.y + textarea.height - 7
     }
     this.props.changeTypeToolReducer({ pos });
   };
 
   onTextChange = e => {
     this.props.changeTypeToolReducer({ text: e.target.value });
+  };
+
+  onImageMouseUp = e => {
+    const image = ReactDOM.findDOMNode(this.imageRef.current).getBoundingClientRect();
+    const textarea = ReactDOM.findDOMNode(this.textareaRef.current).getBoundingClientRect();
+    const pos = {
+      x: textarea.x - image.x + 1,
+      y: textarea.y - image.y + textarea.height - 7
+    }
+    this.props.changeTypeToolReducer({ pos });
   };
 
   onImageMouseDown = e => {
@@ -116,6 +127,7 @@ class Home extends Component {
           <div ref={this.imageRef} className={classes.imageFrame}>
             <img 
               onMouseDown={this.onImageMouseDown}
+              onMouseUp={this.onImageMouseUp}
               className={classes.image} 
               src={`${_.last(images)}?reload=${new Date()}`}
             />

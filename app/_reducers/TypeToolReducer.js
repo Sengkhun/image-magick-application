@@ -6,10 +6,7 @@ const INITIAL_STATE = {
   size: 36,
   text: '',
   color: '#000',
-  pos: {
-    x: 0,
-    y: 0
-  }
+  pos: {},
 };
 
 export default (state = INITIAL_STATE, action) => {

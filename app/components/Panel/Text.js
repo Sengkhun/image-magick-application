@@ -83,7 +83,7 @@ class Text extends PureComponent {
           loading: false, 
           reloadImage: true
         });
-        this.props.changeTypeToolReducer({ openWriter: false, text: '' });
+        this.props.changeTypeToolReducer({ openWriter: false, text: '', pos: {} });
       };
       this.props.addTextOnImage(currentImage, font, size, color, pos, text, callback);
     }
