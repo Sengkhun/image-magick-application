@@ -64,10 +64,7 @@ class Panel extends Component {
     });
     this.props.changeTypeToolReducer({
       openWriter: false,
-      pos: {
-        x: 0,
-        y: 0
-      }
+      text: ''
     });
   };
 

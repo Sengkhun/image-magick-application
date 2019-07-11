@@ -125,10 +125,10 @@ export const brightnessAndContrast = (image, brigthness, contrast, callback) => 
 
 // ----------------------------------------
 
-export const addTextOnImage = (image, font, size, text, callback) => {
+export const addTextOnImage = (image, font, size, color, pos, text, callback) => {
   return async dispatch => {
     const imagePath = imageNameHepler(image);
-    im.convert([image, '-font', font, '-pointsize', size, '-draw', `text 200,200 '${text}'`, imagePath], 
+    im.convert([image, '-font', `"${font}"`, '-pointsize', size, '-draw', `fill ${color} text ${pos.x},${pos.y} '${text}'`, imagePath], 
       async function(err) {
         if (err) {
           callback(false, err);

@@ -2,13 +2,19 @@ import _ from 'lodash';
 import React, { Component, PureComponent } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
-import { withStyles } from '@material-ui/core';
+import { TextField, withStyles } from '@material-ui/core';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import { Draggable } from 'components';
 
 import { changeTypeToolReducer } from 'actions/TypeToolActions';
 
 class Home extends Component {
+
+  constructor(props) {
+    super(props);
+    this.imageRef = React.createRef();
+    this.textareaRef = React.createRef();
+  }
 
   state = {
     zoom: 1,
@@ -37,6 +43,20 @@ class Home extends Component {
     }
   };
 
+  getPos = e => {
+    const image = ReactDOM.findDOMNode(this.imageRef.current).getBoundingClientRect();
+    const textarea = ReactDOM.findDOMNode(this.textareaRef.current).getBoundingClientRect();
+    const pos = {
+      x: textarea.x - image.x,
+      y: textarea.y - image.y + textarea.height
+    }
+    this.props.changeTypeToolReducer({ pos });
+  };
+
+  onTextChange = e => {
+    this.props.changeTypeToolReducer({ text: e.target.value });
+  };
+
   onImageMouseDown = e => {
     const { selected, openWriter } = this.props;
 
@@ -45,7 +65,7 @@ class Home extends Component {
         openWriter: true,
         pos: {
           x: e.nativeEvent.offsetX,
-          y: e.nativeEvent.offsetY
+          y: e.nativeEvent.offsetY,
         }
       });
     }
@@ -62,7 +82,11 @@ class Home extends Component {
       imageOriginalPath, 
       cursor,
       openWriter, 
-      pos
+      pos,
+      size,
+      color,
+      font,
+      text
     } = this.props;
 
     if (images.length <= 0) {
@@ -89,18 +113,23 @@ class Home extends Component {
             transform: `scale(${zoom})`, 
           }}
         >
-          <div className={classes.imageFrame}>
+          <div ref={this.imageRef} className={classes.imageFrame}>
             <img 
               onMouseDown={this.onImageMouseDown}
               className={classes.image} 
               src={`${_.last(images)}?reload=${new Date()}`}
             />
-            { openWriter && selected === 'Type tool' &&
+            { (text || openWriter && selected === 'Type tool') &&
               <Draggable pos={pos}>
-                <TextareaAutosize 
+                <TextareaAutosize
                   autoFocus
+                  ref={this.textareaRef}
                   className={classes.typewriter} 
+                  onMouseUp={this.getPos}
                   aria-label="empty textarea"
+                  style={{ fontFamily: font, fontSize: `${size}px`, color }}
+                  onChange={this.onTextChange}
+                  value={text}
                 />
               </Draggable>
             }
@@ -138,9 +167,9 @@ const styles = theme => ({
     backgroundColor: 'transparent',
     top: 10,
     left: 10,
-    fontSize: 36,
     outline: 'none',
-    borderColor: '#000'
+    border: 'none',
+    padding: 0,
   }
 });
 
@@ -152,6 +181,10 @@ const mapStateToProps = ({ AppReducer, ImageReducer, TypeToolReducer }) => ({
   images: ImageReducer.images,
   openWriter: TypeToolReducer.openWriter,
   pos: TypeToolReducer.pos,
+  size: TypeToolReducer.size,
+  color: TypeToolReducer.color,
+  font: TypeToolReducer.font,
+  text: TypeToolReducer.text,
 });
 
 const withStyleHome = withStyles(styles)(Home);

@@ -74,7 +74,7 @@ class Text extends PureComponent {
     const currentImage = _.last(images);
 
     if (currentImage) {
-      const { font, size, text } = this.props;
+      const { font, size, color, pos, text } = this.props;
       const callback = (ok, error) => {
         if (!ok) {
           alert(error);
@@ -83,8 +83,9 @@ class Text extends PureComponent {
           loading: false, 
           reloadImage: true
         });
+        this.props.changeTypeToolReducer({ openWriter: false, text: '' });
       };
-      this.props.addTextOnImage(currentImage, font, size, text, callback);
+      this.props.addTextOnImage(currentImage, font, size, color, pos, text, callback);
     }
   };
 
@@ -125,8 +126,11 @@ class Text extends PureComponent {
             onOpen={this.handleFontOpen}
             onChange={this.handleChange('font')}
           >
+            <option value='Arial'>Arial</option>
             <option value='helvetica'>Helvetica</option>
             <option value='roboto'>Roboto</option>
+            <option value='sans-serif'>Sans Serif</option>
+            <option value='Times New Roman'>Times New Roman</option>
           </Select>
         </FormControl>
 
@@ -228,6 +232,7 @@ const mapStateToProps = ({ AppReducer, ImageReducer, TypeToolReducer }) => ({
   size: TypeToolReducer.size,
   text: TypeToolReducer.text,
   color: TypeToolReducer.color,
+  pos: TypeToolReducer.pos,
 });
 
 const withStyleText = withStyles(styles)(Text);

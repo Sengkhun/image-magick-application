@@ -44,7 +44,7 @@ class Draggable extends Component {
   };
 
   onMouseUp = e => {
-    this.setState({ dragging: false })
+    this.setState({ dragging: false });
     e.stopPropagation()
     e.preventDefault()
   };

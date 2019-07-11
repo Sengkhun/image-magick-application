@@ -3,8 +3,8 @@ import { TYPE_TOOL_ACTION_TYPES } from 'actions/TypeToolActions';
 const INITIAL_STATE = {
   openWriter: false,
   font: 'helvetica',
-  size: 100,
-  text: 'Hello world',
+  size: 36,
+  text: '',
   color: '#000',
   pos: {
     x: 0,
