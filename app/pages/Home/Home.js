@@ -7,6 +7,7 @@ import { TextField, withStyles } from '@material-ui/core';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import { Draggable } from 'components';
 
+import { drawOnImage } from 'actions/ImageActions';
 import { changeTypeToolReducer } from 'actions/TypeToolActions';
 
 class Home extends Component {
@@ -70,15 +71,20 @@ class Home extends Component {
 
   onImageMouseDown = e => {
     const { selected, openWriter } = this.props;
+    const x = e.nativeEvent.offsetX;
+    const y = e.nativeEvent.offsetY;
 
     if (!openWriter && selected === 'Type tool') {
       this.props.changeTypeToolReducer({
         openWriter: true,
-        pos: {
-          x: e.nativeEvent.offsetX,
-          y: e.nativeEvent.offsetY,
-        }
+        pos: { x, y }
       });
+    } else if (selected == 'Pen tool') {
+      const { color, images } = this.props;
+      const currentImage = _.last(images);
+      const callback = (ok, error) => {
+      };
+      this.props.drawOnImage(currentImage, color, { x, y }, callback);
     }
   };
 
@@ -204,6 +210,7 @@ const withStyleHome = withStyles(styles)(Home);
 export default connect(
   mapStateToProps,
   {
-    changeTypeToolReducer
+    changeTypeToolReducer,
+    drawOnImage
   }
 )(withStyleHome);

@@ -73,7 +73,7 @@ class ColorPicker extends PureComponent {
     return (
       <Fragment>
         <div className={classes.title}>
-          Color Filter:
+          Color Range Filter:
         </div>
 
         <SketchPicker  

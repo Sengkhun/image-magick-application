@@ -15,6 +15,7 @@ import {
   brightnessAndContrast,
   changeImageReducer 
 } from 'actions/ImageActions';
+import { changeBrightnessReducer } from 'actions/BrightnessActions';
 
 class Brightness extends PureComponent {
 
@@ -24,18 +25,20 @@ class Brightness extends PureComponent {
   };
 
   handleSliderChange = name => (event, newValue) => {
+    this.props.changeBrightnessReducer({ [`${name}`]: newValue });
     this.setState({ [`${name}`]: newValue });
   };
 
   handleInputChange = name => event => {
     const newValue = event.target.value;
+    this.props.changeBrightnessReducer({ [`${name}`]: Number(newValue) });
     // if (newValue) {
-      this.setState({ [`${name}`]: Number(newValue) });      
+      // this.setState({ [`${name}`]: Number(newValue) });      
     // }
   };
 
   onSaveClick = () => {
-    const { loading, images } = this.props;
+    const { loading, images, brightness, contrast } = this.props;
 
     // if loading, do nothing
     if (loading) return;
@@ -44,7 +47,6 @@ class Brightness extends PureComponent {
     const currentImage = _.last(images);
 
     if (currentImage) {
-      const { brightness, contrast } = this.state;
       const callback = (ok, error) => {
         if (!ok) {
           alert(error);
@@ -53,6 +55,10 @@ class Brightness extends PureComponent {
           loading: false, 
           reloadImage: true
         });
+        this.props.changeBrightnessReducer({
+          brightness: 0,
+          contrast: 0
+        })
       };
       this.props.brightnessAndContrast(currentImage, brightness, contrast, callback);
     }
@@ -60,8 +66,8 @@ class Brightness extends PureComponent {
 
   render() {
     
-    const { brightness, contrast } = this.state;
-    const { classes, onCancel } = this.props;
+    // const { brightness, contrast } = this.state;
+    const { classes, onCancel, brightness, contrast } = this.props;
 
     return (
       <Fragment>
@@ -179,9 +185,11 @@ const styles = theme => ({
   }
 });
 
-const mapStateToProps = ({ AppReducer, ImageReducer }) => ({
+const mapStateToProps = ({ AppReducer, ImageReducer, BrightnessReducer }) => ({
   loading: AppReducer.loading,
-  images: ImageReducer.images
+  images: ImageReducer.images,
+  brightness: BrightnessReducer.brightness,
+  contrast: BrightnessReducer.contrast,
 });
 
 const withStyleBrightness = withStyles(styles)(Brightness);
@@ -191,6 +199,7 @@ export default connect(
   { 
     changeAppReducer,
     brightnessAndContrast,
-    changeImageReducer
+    changeImageReducer,
+    changeBrightnessReducer
   }
 )(withStyleBrightness);

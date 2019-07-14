@@ -125,6 +125,27 @@ export const brightnessAndContrast = (image, brigthness, contrast, callback) => 
 
 // ----------------------------------------
 
+export const drawOnImage = (image, color, pos, callback) => {
+  return async dispatch => {
+    const imagePath = imageNameHepler(image);
+    im.convert([image, '-fill', color, '-draw', `point ${pos.x},${pos.y}`, '-pointsize', 50, '-size', 'x70', imagePath], 
+      async function(err) {
+        if (err) {
+          callback(false, err);
+        } else {
+          await dispatch({
+            type: IMAGE_ACTION_TYPES.addNewImage,
+            payload: imagePath
+          });
+          callback(true);
+        }
+      }
+    );
+  };
+};
+
+// ----------------------------------------
+
 export const addTextOnImage = (image, font, size, color, pos, text, callback) => {
   return async dispatch => {
     const imagePath = imageNameHepler(image);

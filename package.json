@@ -279,6 +279,8 @@
     "react-cursor-position": "3.0.3",
     "react-dom": "16.8.6",
     "react-draggable": "3.3.0",
+    "react-eyedropper": "^0.0.10",
+    "react-native-get-pixel": "^0.0.5",
     "react-redux": "5.1.1",
     "react-router": "4.3.1",
     "react-router-dom": "4.3.1",
